@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ViralLikho — Script Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E0E12;
+    --ink2:#17171D;
+    --card:#1C1C24;
+    --yellow:#FFE100;
+    --vermil:#FF4B3E;
+    --off:#F7F5EF;
+    --muted:#9A98A6;
+    --line:#2C2C36;
+    --good:#3ED598;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--off);
+    font-family:'Space Grotesk',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .hindi{ font-family:'Noto Sans Devanagari','Space Grotesk',sans-serif; }
+  .display{ font-family:'Archivo Black',sans-serif; }
+
+  /* ticker */
+  .ticker-wrap{
+    background:var(--yellow);
+    color:var(--ink);
+    overflow:hidden;
+    white-space:nowrap;
+    border-bottom:3px solid var(--ink);
+  }
+  .ticker{
+    display:inline-block;
+    padding:8px 0;
+    font-weight:700;
+    font-size:13px;
+    letter-spacing:0.3px;
+    animation:scroll 22s linear infinite;
+  }
+  .ticker span{ margin-right:40px; }
+  @keyframes scroll{
+    0%{ transform:translateX(0); }
+    100%{ transform:translateX(-50%); }
+  }
+
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 24px; }
+
+  header.top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:22px 0;
+  }
+  .logo{
+    display:flex; align-items:center; gap:10px;
+    font-size:20px;
+  }
+  .logo .mark{
+    width:34px;height:34px;background:var(--vermil);
+    border-radius:8px;display:flex;align-items:center;justify-content:center;
+    color:var(--ink); font-family:'Archivo Black',sans-serif; font-size:16px;
+    transform:rotate(-6deg);
+  }
+  .status-pill{
+    font-size:12px; padding:6px 12px; border-radius:100px;
+    border:1px solid var(--line); color:var(--muted);
+  }
+  .status-pill.on{ border-color:var(--good); color:var(--good); }
+
+  /* hero */
+  .hero{ padding:56px 0 40px; }
+  .hero h1{
+    font-family:'Archivo Black',sans-serif;
+    font-size:56px;
+    line-height:1.02;
+    margin:0 0 18px;
+    letter-spacing:-0.5px;
+  }
+  .hero h1 .hi{ font-family:'Noto Sans Devanagari',sans-serif; }
+  .hero h1 .hl{ color:var(--yellow); }
+  .hero p.sub{
+    font-size:17px; color:var(--muted); max-width:560px; line-height:1.6; margin:0;
+  }
+
+  /* layout */
+  .grid{
+    display:grid;
+    grid-template-columns:360px 1fr;
+    gap:24px;
+    padding-bottom:80px;
+  }
+  @media (max-width:860px){ .grid{ grid-template-columns:1fr; } .hero h1{font-size:38px;} }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:22px;
+  }
+  .card + .card{ margin-top:20px; }
+  .card h3{
+    margin:0 0 4px; font-size:12px; text-transform:uppercase; letter-spacing:1.2px;
+    color:var(--muted); font-weight:600;
+  }
+  .card h2{
+    margin:6px 0 16px; font-size:19px; font-weight:600;
+  }
+
+  /* google btn */
+  .g-btn{
+    width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
+    background:var(--off); color:#1f1f1f; border:none; border-radius:10px;
+    padding:12px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit;
+  }
+  .g-btn:hover{ background:#fff; }
+  .g-btn svg{ width:18px; height:18px; }
+
+  .signed{
+    display:flex; align-items:center; gap:12px; padding:10px; background:var(--ink2);
+    border-radius:10px; border:1px solid var(--line);
+  }
+  .avatar{
+    width:36px;height:36px;border-radius:50%;background:var(--vermil);
+    display:flex;align-items:center;justify-content:center; font-weight:700; color:var(--ink);
+    flex-shrink:0;
+  }
+  .signed .who p{ margin:0; }
+  .signed .who .name{ font-size:14px; font-weight:600; }
+  .signed .who .mail{ font-size:12px; color:var(--muted); }
+  .signout{
+    margin-left:auto; background:none; border:none; color:var(--muted); font-size:12px;
+    cursor:pointer; text-decoration:underline; font-family:inherit;
+  }
+
+  label{ display:block; font-size:13px; color:var(--muted); margin:14px 0 6px; }
+  label:first-of-type{ margin-top:0; }
+  input[type=text], input[type=password], select, textarea{
+    width:100%; background:var(--ink2); border:1px solid var(--line); color:var(--off);
+    padding:11px 12px; border-radius:9px; font-size:14px; font-family:inherit;
+  }
+  input:focus, select:focus, textarea:focus{ outline:none; border-color:var(--yellow); }
+  .hint{ font-size:11.5px; color:var(--muted); margin-top:6px; line-height:1.5; }
+  .hint a{ color:var(--yellow); }
+
+  .chip-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:6px; }
+  .chip{
+    padding:7px 13px; border-radius:100px; border:1px solid var(--line); background:var(--ink2);
+    color:var(--muted); font-size:12.5px; cursor:pointer; font-family:inherit;
+  }
+  .chip.active{ background:var(--yellow); color:var(--ink); border-color:var(--yellow); font-weight:600; }
+
+  .gen-btn{
+    width:100%; margin-top:20px; padding:14px; border:none; border-radius:10px;
+    background:var(--vermil); color:var(--off); font-weight:700; font-size:15px;
+    cursor:pointer; font-family:inherit; display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .gen-btn:hover{ filter:brightness(1.08); }
+  .gen-btn:disabled{ opacity:0.5; cursor:not-allowed; }
+
+  /* output */
+  .phone{
+    background:var(--ink2); border:1px solid var(--line); border-radius:16px; padding:20px;
+    min-height:420px; display:flex; flex-direction:column;
+  }
+  .phone .empty{
+    margin:auto; text-align:center; color:var(--muted); max-width:280px;
+  }
+  .phone .empty .big{ font-size:40px; margin-bottom:10px; }
+  .phone .empty p{ font-size:14px; line-height:1.6; }
+
+  .meter-row{ display:flex; gap:16px; margin-bottom:18px; }
+  .meter{ flex:1; }
+  .meter .label{ font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:6px; }
+  .meter .bar{ height:8px; background:var(--ink); border-radius:100px; overflow:hidden; border:1px solid var(--line); }
+  .meter .fill{ height:100%; border-radius:100px; }
+  .meter .val{ font-size:13px; margin-top:5px; font-weight:600; }
+
+  .script-block{
+    background:var(--ink); border:1px solid var(--line); border-radius:12px; padding:18px;
+    font-size:14.5px; line-height:1.8; white-space:pre-wrap; flex:1;
+    font-family:'Noto Sans Devanagari','Space Grotesk',sans-serif;
+  }
+  .script-block .tag{
+    display:inline-block; font-family:'Space Grotesk',sans-serif; font-size:10.5px; font-weight:700;
+    text-transform:uppercase; letter-spacing:0.8px; color:var(--ink); background:var(--yellow);
+    padding:2px 8px; border-radius:5px; margin:10px 0 4px;
+  }
+  .out-actions{ display:flex; gap:10px; margin-top:14px; }
+  .out-actions button{
+    flex:1; background:transparent; border:1px solid var(--line); color:var(--off);
+    padding:10px; border-radius:9px; font-size:13px; cursor:pointer; font-family:inherit; font-weight:600;
+  }
+  .out-actions button:hover{ border-color:var(--muted); }
+
+  .err{
+    background:rgba(255,75,62,0.1); border:1px solid var(--vermil); color:#ffb3ab;
+    padding:12px 14px; border-radius:10px; font-size:13px; margin-top:14px; line-height:1.6;
+  }
+
+  .loading{ margin:auto; text-align:center; color:var(--muted); }
+  .dots{ display:flex; gap:6px; justify-content:center; margin-bottom:14px; }
+  .dots span{ width:8px;height:8px;border-radius:50%; background:var(--yellow); animation:bounce 1s infinite ease-in-out; }
+  .dots span:nth-child(2){ animation-delay:0.15s; }
+  .dots span:nth-child(3){ animation-delay:0.3s; }
+  @keyframes bounce{ 0%,80%,100%{ transform:translateY(0); opacity:0.4; } 40%{ transform:translateY(-6px); opacity:1; } }
+
+  .modal-bg{
+    position:absolute; inset:0; background:rgba(0,0,0,0.6); display:none;
+    align-items:center; justify-content:center; z-index:10; border-radius:14px;
+  }
+  .modal-bg.show{ display:flex; }
+  .modal{
+    background:var(--card); border:1px solid var(--line); border-radius:14px; padding:26px;
+    width:300px;
+  }
+  .modal h4{ margin:0 0 4px; font-size:16px; }
+  .modal p{ font-size:12.5px; color:var(--muted); margin:0 0 16px; line-height:1.5; }
+  .modal button.close{
+    width:100%; margin-top:14px; background:none; border:1px solid var(--line); color:var(--muted);
+    padding:9px; border-radius:8px; cursor:pointer; font-family:inherit; font-size:13px;
+  }
+
+  footer{
+    border-top:1px solid var(--line); padding:20px 0; text-align:center; color:var(--muted); font-size:12px;
+  }
+</style>
+</head>
+<body>
+
+<div class="ticker-wrap">
+  <div class="ticker" id="tickerText"></div>
+</div>
+
+<div class="wrap">
+  <header class="top">
+    <div class="logo">
+      <div class="mark">V</div>
+      <span class="display" style="font-size:18px;">ViralLikho</span>
+    </div>
+    <div class="status-pill" id="apiPill">API — not connected</div>
+  </header>
+
+  <section class="hero">
+    <h1>Har script ek<br><span class="hl">Hook</span> hai. <span class="hi">बाकी</span><br>bas <span class="hl">Retention</span> hai.</h1>
+    <p class="sub">Topic daalo, format chuno — Auto Bharat jaisi punchy, fast-cut, Hinglish scripts seconds mein. Apni OpenAI key se, apne control mein.</p>
+  </section>
+
+  <div class="grid">
+    <!-- LEFT PANEL -->
+    <div>
+      <div class="card" style="position:relative;">
+        <h3>Account</h3>
+        <h2>Sign in</h2>
+
+        <div id="loggedOut">
+          <button class="g-btn" id="googleBtn">
+            <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.4-1.9 14.3-5.1l-6.6-5.4C29.6 35.4 26.9 36 24 36c-5.3 0-9.6-3.1-11.3-7.5l-6.6 5.1C9.5 39.7 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.3 5.6l6.6 5.4C41.5 35.9 44 30.4 44 24c0-1.3-.1-2.7-.4-3.5z"/></svg>
+            Sign in with Google
+          </button>
+          <p class="hint">Ye ek demo sign-in hai. Live website par asli Google login ke liye tumhe apna Google Cloud project + Client ID chahiye hoga apne domain par.</p>
+        </div>
+
+        <div id="loggedIn" style="display:none;"></div>
+      </div>
+
+      <div class="card">
+        <h3>Connect AI</h3>
+        <h2>Anthropic (Claude) API key</h2>
+        <input type="password" id="apiKey" placeholder="sk-ant-...">
+        <p class="hint">Ye Claude.ai ke login se <b>alag</b> hai — koi bhi third-party site tumhare Claude account se seedha connect nahi ho sakti. Key yahan se lo: <a href="https://console.anthropic.com/settings/keys" target="_blank">console.anthropic.com/settings/keys</a>. Naye account par kuch free trial credits milte hain. Key sirf is session mein rehti hai, kahin save nahi hoti.</p>
+        <button class="g-btn" style="margin-top:14px; background:var(--ink2); color:var(--off); border:1px solid var(--line);" id="saveKeyBtn">Save key for this session</button>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div>
+      <div class="card">
+        <h3>Script brief</h3>
+        <h2>Kya banana hai?</h2>
+
+        <label>Topic / Idea</label>
+        <input type="text" id="topic" placeholder="e.g. Tata Nexon ki safety rating itni high kyu hai">
+
+        <label>Niche</label>
+        <div class="chip-row" id="nicheRow">
+          <button class="chip active" data-v="Auto / vehicles">Auto / vehicles</button>
+          <button class="chip" data-v="Facts / trivia">Facts / trivia</button>
+          <button class="chip" data-v="Desh / patriotism">Desh / patriotism</button>
+          <button class="chip" data-v="Motivation">Motivation</button>
+          <button class="chip" data-v="Tech">Tech</button>
+          <button class="chip" data-v="History">History</button>
+        </div>
+
+        <label>Language</label>
+        <div class="chip-row" id="langRow">
+          <button class="chip active" data-v="Hinglish">Hinglish</button>
+          <button class="chip" data-v="Hindi">Pure Hindi</button>
+          <button class="chip" data-v="English">English</button>
+        </div>
+
+        <label>Length</label>
+        <div class="chip-row" id="lenRow">
+          <button class="chip active" data-v="Shorts (30-45 sec)">Shorts (30-45 sec)</button>
+          <button class="chip" data-v="Reel (60 sec)">Reel (60 sec)</button>
+          <button class="chip" data-v="Long (2-3 min)">Long (2-3 min)</button>
+        </div>
+
+        <button class="gen-btn" id="genBtn">
+          <span>Generate viral script</span>
+        </button>
+        <div class="err" id="errBox" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>ViralLikho — apna API key, apna data, apna control.</footer>
+
+<script>
+  const tickerItems = ["🔥 12.4M VIEWS", "AUTO BHARAT STYLE HOOKS", "0 SEC DROP-OFF TARGET", "HINGLISH SCRIPTS", "VIRALITY SCORE INSIDE", "APNI GPT KEY, APNA CONTROL"];
+  document.getElementById('tickerText').innerHTML = tickerItems.concat(tickerItems).map(t => `<span>${t}</span>`).join('');
+
+  let sessionUser = null;
+  let sessionKey = null;
+
+  function initials(name){
+    return name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+  }
+
+  document.getElementById('googleBtn').addEventListener('click', () => {
+    const name = prompt("Demo sign-in — apna naam likho:");
+    if(!name) return;
+    sessionUser = { name: name.trim(), email: name.trim().toLowerCase().replace(/\s+/g,'.') + '@gmail.com' };
+    document.getElementById('loggedOut').style.display = 'none';
+    const box = document.getElementById('loggedIn');
+    box.style.display = 'block';
+    box.innerHTML = `
+      <div class="signed">
+        <div class="avatar">${initials(sessionUser.name)}</div>
+        <div class="who">
+          <p class="name">${sessionUser.name}</p>
+          <p class="mail">${sessionUser.email}</p>
+        </div>
+        <button class="signout" id="signoutBtn">sign out</button>
+      </div>`;
+    document.getElementById('signoutBtn').addEventListener('click', () => {
+      sessionUser = null;
+      document.getElementById('loggedIn').style.display = 'none';
+      document.getElementById('loggedOut').style.display = 'block';
+    });
+  });
+
+  document.getElementById('saveKeyBtn').addEventListener('click', () => {
+    const val = document.getElementById('apiKey').value.trim();
+    const pill = document.getElementById('apiPill');
+    if(!val){
+      pill.textContent = 'API — not connected';
+      pill.classList.remove('on');
+      return;
+    }
+    sessionKey = val;
+    pill.textContent = 'API — connected';
+    pill.classList.add('on');
+  });
+
+  function setupChipRow(id){
+    const row = document.getElementById(id);
+    row.addEventListener('click', (e) => {
+      const btn = e.target.closest('.chip');
+      if(!btn) return;
+      [...row.children].forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  }
+  setupChipRow('nicheRow');
+  setupChipRow('langRow');
+  setupChipRow('lenRow');
+
+  function getActive(id){
+    return document.querySelector('#' + id + ' .chip.active').dataset.v;
+  }
+
+  const phoneHTML = `
+    <div class="phone" id="phone">
+      <div class="empty">
+        <div class="big">📝</div>
+        <p>Topic likho, options chuno, aur "Generate viral script" dabao — script yahan aayegi.</p>
+      </div>
+    </div>`;
+
+  // insert phone panel under the brief card
+  document.querySelector('.grid > div:last-child').insertAdjacentHTML('beforeend', `<div class="card">${phoneHTML}</div>`);
+
+  function showError(msg){
+    const box = document.getElementById('errBox');
+    box.style.display = 'block';
+    box.innerHTML = msg;
+  }
+  function hideError(){
+    document.getElementById('errBox').style.display = 'none';
+  }
+
+  document.getElementById('genBtn').addEventListener('click', async () => {
+    hideError();
+    const topic = document.getElementById('topic').value.trim();
+    const phone = document.getElementById('phone');
+
+    if(!topic){
+      showError('Pehle ek topic ya idea likho.');
+      return;
+    }
+    if(!sessionKey){
+      showError('Pehle apni Anthropic (Claude) API key daalo aur "Save key" dabao. Key <a href="https://console.anthropic.com/settings/keys" target="_blank">yahan</a> se milti hai.');
+      return;
+    }
+
+    const niche = getActive('nicheRow');
+    const lang = getActive('langRow');
+    const len = getActive('lenRow');
+
+    phone.innerHTML = `<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Script likhi ja rahi hai...</div>`;
+
+    const systemPrompt = `Tum ek expert viral shorts/reels script writer ho, jo "Auto Bharat" jaisे high-retention Indian YouTube/Instagram channels ke liye likhte ho. Style: pehle 2 second mein zabardast hook (scroll-stopping), fir tez-tez facts/story with curiosity gaps, beech mein ek twist ya surprising fact, aur end mein strong CTA (follow/comment/share). Language mix: ${lang}. Sentences chhoti aur punchy, jaise koi energetic narrator bol raha ho. Format output exactly as:
+
+[HOOK]
+...
+
+[BODY]
+...
+
+[TWIST]
+...
+
+[CTA]
+...
+
+Iske baad ek naye line par likho: VIRALITY_SCORE: <number 1-100>
+Aur ek line: HOOK_STRENGTH: <number 1-100>
+Ye scores tumhare hisab se realistic honi chahiye (perfect 100 mat do har baar).`;
+
+    const userPrompt = `Topic: ${topic}\nNiche: ${niche}\nTarget length: ${len}\nEk viral script likho.`;
+
+    try{
+      const resp = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': sessionKey,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 1000,
+          system: systemPrompt,
+          messages: [
+            { role: 'user', content: userPrompt }
+          ]
+        })
+      });
+
+      if(!resp.ok){
+        const errData = await resp.json().catch(()=>({}));
+        throw new Error(errData?.error?.message || ('HTTP ' + resp.status));
+      }
+
+      const data = await resp.json();
+      const text = data.content?.[0]?.text || '';
+
+      const scoreMatch = text.match(/VIRALITY_SCORE:\s*(\d+)/i);
+      const hookMatch = text.match(/HOOK_STRENGTH:\s*(\d+)/i);
+      const viralScore = scoreMatch ? parseInt(scoreMatch[1]) : 70;
+      const hookScore = hookMatch ? parseInt(hookMatch[1]) : 70;
+
+      let clean = text
+        .replace(/VIRALITY_SCORE:\s*\d+/i, '')
+        .replace(/HOOK_STRENGTH:\s*\d+/i, '')
+        .replace(/\[(HOOK|BODY|TWIST|CTA)\]/g, m => `__TAG__${m.replace(/[\[\]]/g,'')}__TAG__`)
+        .trim();
+
+      const scriptEsc = clean
+        .split('__TAG__')
+        .map(part => {
+          if(['HOOK','BODY','TWIST','CTA'].includes(part)){
+            return `<span class="tag">${part}</span>`;
+          }
+          return part.replace(/</g,'&lt;');
+        }).join('');
+
+      function barColor(v){
+        if(v >= 75) return 'var(--good)';
+        if(v >= 45) return 'var(--yellow)';
+        return 'var(--vermil)';
+      }
+
+      phone.innerHTML = `
+        <div class="meter-row">
+          <div class="meter">
+            <div class="label">Virality score</div>
+            <div class="bar"><div class="fill" style="width:${viralScore}%; background:${barColor(viralScore)};"></div></div>
+            <div class="val">${viralScore}/100</div>
+          </div>
+          <div class="meter">
+            <div class="label">Hook strength</div>
+            <div class="bar"><div class="fill" style="width:${hookScore}%; background:${barColor(hookScore)};"></div></div>
+            <div class="val">${hookScore}/100</div>
+          </div>
+        </div>
+        <div class="script-block" id="scriptText">${scriptEsc}</div>
+        <div class="out-actions">
+          <button id="copyBtn">Copy script</button>
+          <button id="regenBtn">Regenerate</button>
+        </div>`;
+
+      document.getElementById('copyBtn').addEventListener('click', () => {
+        navigator.clipboard.writeText(document.getElementById('scriptText').innerText);
+        const b = document.getElementById('copyBtn');
+        b.textContent = 'Copied!';
+        setTimeout(()=> b.textContent = 'Copy script', 1500);
+      });
+      document.getElementById('regenBtn').addEventListener('click', () => {
+        document.getElementById('genBtn').click();
+      });
+
+    }catch(err){
+      phone.innerHTML = phoneHTML.match(/<div class="phone"[\s\S]*<\/div>/)[0];
+      let msg = 'Kuch gadbad ho gayi: ' + err.message;
+      if(String(err.message).toLowerCase().includes('failed to fetch')){
+        msg = 'Browser se seedhe Claude API tak request block ho gayi. Check karo: (1) API key sahi copy hui ho, (2) tumhare Anthropic account me credits/trial balance ho. Agar dikkat rahe to ek chhota backend/server (Node.js proxy) sabse reliable fix hai — main chahu toh wo bana kar de sakta hoon.';
+      }
+      if(String(err.message).toLowerCase().includes('credit balance')){
+        msg = 'Tumhare Anthropic account me credits khatam ho gaye lagte hain. console.anthropic.com par jaakar balance/billing check karo.';
+      }
+      showError(msg);
+    }
+  });
+</script>
+
+</body>
+</html>
